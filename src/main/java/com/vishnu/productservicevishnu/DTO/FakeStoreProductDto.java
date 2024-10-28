@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class FakeStoreProductDto {
 
-   private long id;
+   private Long id;
     private String title;
     private String category;
     private String description;

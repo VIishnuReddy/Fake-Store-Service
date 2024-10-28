@@ -1,12 +1,12 @@
 package com.vishnu.productservicevishnu.controllers;
 
+import com.vishnu.productservicevishnu.exceptions.ProductNotFoundException;
 import com.vishnu.productservicevishnu.models.Product;
 import com.vishnu.productservicevishnu.services.FakeStoreProductService;
 import com.vishnu.productservicevishnu.services.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,40 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductByid(@PathVariable("id") Long id){
-        return productService.getProductById(id);
+    public ResponseEntity<Product> getProductByid(@PathVariable("id") Long id) throws ProductNotFoundException {
+//        ResponseEntity<Product> responseEntity=null;
+//        try {
+//            Product product = productService.getProductById(id);
+//            responseEntity = new ResponseEntity<>(product, HttpStatus.OK);
+//
+//        } catch (RuntimeException | ProductNotFoundException e){
+//            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+        ResponseEntity<Product> responseEntity=new ResponseEntity<>(
+                productService.getProductById(id),
+                HttpStatus.OK
+        );
+        return responseEntity;
     }
 
     @GetMapping
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
+    }
+
+
+    public void deleteProduct(Long ProductId){
+
+    }
+
+    @PatchMapping("/{id}")
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
+        return productService.updateProduct(id,product);
+    }
+
+    @PutMapping("/id")
+    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product){
+        return null;
     }
 
 }
