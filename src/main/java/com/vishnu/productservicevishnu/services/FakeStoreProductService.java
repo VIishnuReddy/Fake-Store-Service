@@ -4,6 +4,7 @@ import com.vishnu.productservicevishnu.DTO.FakeStoreProductDto;
 import com.vishnu.productservicevishnu.exceptions.ProductNotFoundException;
 import com.vishnu.productservicevishnu.models.Category;
 import com.vishnu.productservicevishnu.models.Product;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -70,6 +71,17 @@ public class FakeStoreProductService implements ProductService{
 
     @Override
     public Product replaceProduct(Long id, Product product) {
+        RequestCallback requestCallback=restTemplate.httpEntityCallback(product, FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor= new HttpMessageConverterExtractor<>(FakeStoreProductDto.class,
+                restTemplate.getMessageConverters());
+
+        FakeStoreProductDto response=restTemplate.execute("https://fakestoreapi.com/products/"+id,
+                HttpMethod.PUT, requestCallback, responseExtractor);
+        return convertProductToFakeStore(response);
+    }
+
+    @Override
+    public Product addNewProduct(Product product) {
         return null;
     }
 
